@@ -6,3 +6,16 @@ body {
 a {
   color: #00B7FF;
 }
+
+.form-group input {
+  width: 60%;
+  margin: 0 auto;
+}
+
+#submit {
+  width: 30%;
+}
+
+#buttonContainer input {
+  width: 40%;
+}
