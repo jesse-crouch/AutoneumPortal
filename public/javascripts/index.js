@@ -15,7 +15,7 @@ Object.size = function(obj) {
 };
 
 $(document).ready(() => { 
-    var server = 'http://192.168.0.29:3000';
+    var server = 'http://99.242.210.34:3000';
 
     var buttonContainer = document.getElementById('buttonContainer');
 
@@ -70,14 +70,17 @@ $(document).ready(() => {
 
                 var titleText = document.getElementById('title');
                 if (data.info.first_name == '_line') {
-                    // If the user is a line, just redirect straight to the setup
-                    window.location.replace(server + '/setup/line');
-                } else if (DataCue.info.first_name == '_shipping') {
+                    // If the user is line, customize the welcome message
+                    titleText.innerHTML = 'Line Panel';
+                    document.title = 'Home - Line';
+                } else if (data.info.first_name == '_shipping') {
                     // If the user is shipping, customize the welcome message
                     titleText.innerHTML = 'Shipping Panel';
+                    document.title = 'Home - Shipping';
                 } else {
                     // Any other user, just use the first_name
                     titleText.innerHTML = 'Welcome ' + data.info.first_name + '!';
+                    document.title = 'Home - ' + data.info.first_name;
                 }
 
                 // Loop through all actions, if the user privilege level is equal or
@@ -85,17 +88,21 @@ $(document).ready(() => {
                 for (var index in actions) {
                     if (actions[index].level <= data.info.level) {
 
-                        var newForm = document.createElement('form');
-                        newForm.action = actions[index].action;
-                        newForm.style.margin = '20px';
+                        if (actions[index].name == 'Line' && data.info.first_name == '_shipping') {
+                            // Do nothing
+                        } else {
+                            var newForm = document.createElement('form');
+                            newForm.action = actions[index].action;
+                            newForm.style.margin = '20px';
 
-                        var newButton = document.createElement('input');
-                        newButton.className = 'btn btn-success';
-                        newButton.type = 'submit';
-                        newButton.value = actions[index].name;
+                            var newButton = document.createElement('input');
+                            newButton.className = 'btn btn-success';
+                            newButton.type = 'submit';
+                            newButton.value = actions[index].name;
 
-                        newForm.appendChild(newButton);
-                        buttonContainer.appendChild(newForm);
+                            newForm.appendChild(newButton);
+                            buttonContainer.appendChild(newForm);
+                        }
                     }
                 }
                 createLogoutButton();
