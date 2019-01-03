@@ -9,7 +9,7 @@ var { Client } = require('pg');
 var client = new Client({
     host: 'localhost',
     port: '5432',
-    database: 'SupplyRequest',
+    database: 'autoneumportal',
     user: 'postgres',
     password: 'mplkO0'
 });
@@ -63,6 +63,7 @@ function getTimestamp(req) {
 
 // POST and GET backend methods ***********************************************
 
+// Verify login details, and create jwt if correct
 app.post('/verifyLogin', (req, res) => {
     // Check if user exists with the given email
     var query = 'select * from users where users.email = \'' + req.body.email +
@@ -109,6 +110,92 @@ app.post('/verifyToken', (req, res) => {
         console.log(getTimestamp(req) + 'Error verifying token');
         res.json({success: false});
     }
+});
+
+// Client requesting a list of all lines
+app.get('/getLines', (req, res) => {
+    var query = 'select number from line';
+    client.query(query, (err, result) => {
+        if (err) console.log(err);
+
+        if (result.rows.length > 0) {
+            res.json({
+                success: true,
+                lines: result.rows
+            });
+        } else {
+            res.json({success: false});
+        }
+    });
+});
+
+// Client requesting a list of all line modes given a line number
+app.post('/getLineModes', (req, res) => {
+    var query = 'select line_mode from line where line.number = \'' + req.body.number + '\'';
+    client.query(query, (err, result) => {
+        if (err) console.log(err);
+
+        if (result.rows.length > 0) {
+            res.json({
+                success: true,
+                modes: result.rows
+            });
+        } else {
+            res.json({success: false});
+        }
+    });
+});
+
+// Client requesting a list of all materials given a line number and mode
+app.post('/getMaterials', (req, res) => {
+    var query = 'select name from material, line where material.line_id = line.line_id and line.number = \'' + req.body.number + '\' and line.line_mode = \'' + req.body.line_mode + '\'';
+    client.query(query, (err, result) => {
+        if (err) console.log(err);
+
+        if (result.rows.length > 0) {
+            res.json({
+                success: true,
+                materials: result.rows
+            });
+        } else {
+            res.json({success: false});
+        }
+    });
+});
+
+// Client is requesting the material id for a given line, mode, and material name
+app.post('/getMaterialID', (req, res) => {
+    var query = 'select material_id from material, line where material.line_id = line.line_id and material.name = \'' + req.body.name + '\' and line.number = \'' + req.body.number + '\' and line.line_mode = \'' + req.body.line_mode + '\'';
+    client.query(query, (err, result) => {
+        if (err) console.log(err);
+
+        if (result.rows.length > 0) {
+            res.json({
+                success: true,
+                material_id: result.rows[0].material_id
+            });
+        } else {
+            res.json({success: false});
+        }
+    });
+});
+
+// Client is requesting line information given a material ID
+app.post('/getLineInfo', (req, res) => {
+    var query = 'select number, line_mode, name from material, line where material.line_id = line.line_id and material_id = \'' + req.body.material_id + '\'';
+    console.log('\n' + query + '\n');
+    client.query(query, (err, result) => {
+        if (err) console.log(err);
+
+        if (result.rows.length > 0) {
+            res.json({
+                success: true,
+                line_info: result.rows
+            });
+        } else {
+            res.json({success: false});
+        }
+    });
 });
 
 // POST and GET backend methods END********************************************

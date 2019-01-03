@@ -12,8 +12,9 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     div(style="width: 50%; margin: 0 auto; text-align: center;")
-      img(src="/images/autoneum.jpg" style="width: 50%; margin: 0 auto; padding-bottom: 0;")
-      h1(style="color: #9FCF15; margin-top: 0; padding-top: 0; margin-bottom: 25px; font-weight: bold;") London
+      div(id="logo")
+        img(src="/images/autoneum.jpg" style="width: 50%; margin: 0 auto; padding-bottom: 0;")
+        h1(style="color: #9FCF15; margin-top: 0; padding-top: 0; margin-bottom: 25px; font-weight: bold;") London
 
-      h3(id="title")= title
+      h2(id="title")= title
       block content
