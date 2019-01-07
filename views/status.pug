@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    img(src='/images/autoneum.jpg' style='width: 40%; display: block; margin: 0 auto;')
+    div(class='titleBar')
+      h1(id="loading" style='float: left;') Loading...
+      h1(id="clock" style='float: right;') 
+    table(id="full-table" style="visibility: hidden; width: 100%" class='table table-striped')
+      thead(class='thead thead-dark')
+          th Status
+          th Line
+          th Material
+          th Colour
+          th Code
+          th Time Requested
+      tbody(id='table-body')

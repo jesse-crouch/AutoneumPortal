@@ -1,3 +1,15 @@
+// Method for fetching a specific cookie from document
+function getCookie(cookieName, document) {
+    // Check if cookie exists
+    if (document.cookie.includes(cookieName)) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + cookieName + "=");
+        if (parts.length == 2) return parts.pop().split(";").shift();
+    } else {
+        return '';
+    }
+}
+
 $(document).ready(() => {
     var server = 'http://99.242.210.34:3000';
 
@@ -5,6 +17,7 @@ $(document).ready(() => {
     if (!document.cookie.includes('token')) {
         window.location.replace(server);
     }
+    var token = getCookie('token', document);
 
     var lineSelectHeader = document.getElementById('lineSelectHeader');
     var modeSelectHeader = document.getElementById('modeSelectHeader');
@@ -35,18 +48,21 @@ $(document).ready(() => {
 
         if (number != 'Select a Line' && mode != 'Select a Line Mode' && material != 'Select a Material') {
             // All selections are good. Fetch material ID from DB and send as url param
-            var postData = {
+            $.post(server + '/getMaterialLineID', {
+                token: token,
                 number: number,
                 line_mode: mode,
                 name: material
-            };
-            $.post(server + '/getMaterialID', postData, (data) => {
+            }, (data) => {
                 if (data.success) {
-                    window.location.replace(server + '/line?i=' + data.material_id);
+                    window.location.replace(server + '/line?m=' +
+                        data.material_id + '&l=' + data.line_id);
                 } else {
                     alert('Error occurred, try again.');
                 }
             });
+        } else {
+            alert('Please check your selections, something is missing.');
         }
     });
 
@@ -57,7 +73,7 @@ $(document).ready(() => {
 
         // Update the line modes now that a number has been chosen
         if (number != 'Select a Line') {
-            $.post(server + '/getLineModes', {number: number}, (data) => {
+            $.post(server + '/getLineModes', {token: token, number: number}, (data) => {
                 if (data.success) {
                     populateModes(data);
     
@@ -70,15 +86,14 @@ $(document).ready(() => {
             });
         }
 
-        if (materialSelect.style.visibility != 'hidden') {
+        var mode = modeSelect.options[modeSelect.selectedIndex].value;
+        if (materialSelect.style.visibility != 'hidden' && mode != 'Select a Line Mode') {
             // Materials not invisible, update list
-
-            var mode = modeSelect.options[modeSelect.selectedIndex].value;
-            var postData = {
+            $.post(server + '/getMaterials', {
+                token: token,
                 number: number,
                 line_mode: mode
-            };
-            $.post(server + '/getMaterials', postData, (data) => {
+            }, (data) => {
                 if (data.success) {
                     populateMaterials(data);
                 } else {
@@ -97,11 +112,11 @@ $(document).ready(() => {
             // Material not invisible, update list
             
             var mode = modeSelect.options[modeSelect.selectedIndex].value;
-            var postData = {
+            $.post(server + '/getMaterials', {
+                token: token,
                 number: number,
                 line_mode: mode
-            };
-            $.post(server + '/getMaterials', postData, (data) => {
+            }, (data) => {
                 if (data.success) {
                     populateMaterials(data);
                 } else {
@@ -203,7 +218,7 @@ $(document).ready(() => {
     }
 
     // Get list of lines from server first
-    $.get(server + '/getLines', (data) => {
+    $.post(server + '/getLines', {token: token}, (data) => {
         populateLines(data);
 
         // Change the line header, and make the lineSelect visible again

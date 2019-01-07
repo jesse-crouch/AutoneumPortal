@@ -15,7 +15,7 @@ $(document).ready(() => {
                 // Verification succeeded, set token as cookie, expires depending on user
                 var date = new Date();
                 
-                if (email == 'line' | email == 'shipping') {
+                if (email == 'line' || email == 'shipping') {
                     // If it's for a line or shipping, cookie expires in 8 hours
                     date.setTime(date.getTime() + (8*60*60*1000));
                 } else {

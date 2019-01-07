@@ -54,11 +54,20 @@ app.use('/status', statusRouter);
 app.use('/materials', matsRouter);
 app.use('/users', usersRouter);
 
-function getTimestamp(req) {
+function getTimestamp() {
     var date = new Date();
-    return '[' + date.getHours() + ':' + date.getMinutes() + ':' +
-        date.getSeconds() + '][' + req.connection.remoteAddress.substring(7) +
-        '] ';
+    return date.getHours() + ':' + date.getMinutes() + ':' +
+        date.getSeconds();
+}
+
+// Method to verify user can access page
+function canUserAccess(token, level) {
+    var payload = jwt.verify(token, secretKey);
+    if (payload.level >= level) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // POST and GET backend methods ***********************************************
@@ -113,89 +122,373 @@ app.post('/verifyToken', (req, res) => {
 });
 
 // Client requesting a list of all lines
-app.get('/getLines', (req, res) => {
-    var query = 'select number from line';
-    client.query(query, (err, result) => {
-        if (err) console.log(err);
+app.post('/getLines', (req, res) => {
+    if (canUserAccess(req.body.token, 1)) {
+        var query = 'select number from line';
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
 
-        if (result.rows.length > 0) {
-            res.json({
-                success: true,
-                lines: result.rows
-            });
-        } else {
-            res.json({success: false});
-        }
-    });
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    lines: result.rows
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
 });
 
 // Client requesting a list of all line modes given a line number
 app.post('/getLineModes', (req, res) => {
-    var query = 'select line_mode from line where line.number = \'' + req.body.number + '\'';
-    client.query(query, (err, result) => {
-        if (err) console.log(err);
+    if (canUserAccess(req.body.token, 1)) {
+        var query = 'select line_mode from line where line.number = \'' + req.body.number + '\'';
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
 
-        if (result.rows.length > 0) {
-            res.json({
-                success: true,
-                modes: result.rows
-            });
-        } else {
-            res.json({success: false});
-        }
-    });
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    modes: result.rows
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
 });
 
 // Client requesting a list of all materials given a line number and mode
 app.post('/getMaterials', (req, res) => {
-    var query = 'select name from material, line where material.line_id = line.line_id and line.number = \'' + req.body.number + '\' and line.line_mode = \'' + req.body.line_mode + '\'';
-    client.query(query, (err, result) => {
-        if (err) console.log(err);
+    if (canUserAccess(req.body.token, 1)) {
+        var query = 'select name from material, line where material.line_id = line.line_id and line.number = \'' + req.body.number + '\' and line.line_mode = \'' + req.body.line_mode + '\'';
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
 
-        if (result.rows.length > 0) {
-            res.json({
-                success: true,
-                materials: result.rows
-            });
-        } else {
-            res.json({success: false});
-        }
-    });
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    materials: result.rows
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
 });
 
 // Client is requesting the material id for a given line, mode, and material name
-app.post('/getMaterialID', (req, res) => {
-    var query = 'select material_id from material, line where material.line_id = line.line_id and material.name = \'' + req.body.name + '\' and line.number = \'' + req.body.number + '\' and line.line_mode = \'' + req.body.line_mode + '\'';
-    client.query(query, (err, result) => {
-        if (err) console.log(err);
+app.post('/getMaterialLineID', (req, res) => {
+    if (canUserAccess(req.body.token, 1)) {
+        var query = 'select material_id, line.line_id from material, line where material.line_id = line.line_id and material.name = \'' + req.body.name + '\' and line.number = \'' + req.body.number + '\' and line.line_mode = \'' + req.body.line_mode + '\'';
+        console.log('\n' + query + '\n');
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
 
-        if (result.rows.length > 0) {
-            res.json({
-                success: true,
-                material_id: result.rows[0].material_id
-            });
-        } else {
-            res.json({success: false});
-        }
-    });
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    line_id: result.rows[0].line_id,
+                    material_id: result.rows[0].material_id
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
 });
 
 // Client is requesting line information given a material ID
 app.post('/getLineInfo', (req, res) => {
-    var query = 'select number, line_mode, name from material, line where material.line_id = line.line_id and material_id = \'' + req.body.material_id + '\'';
-    console.log('\n' + query + '\n');
-    client.query(query, (err, result) => {
-        if (err) console.log(err);
+    if (canUserAccess(req.body.token, 1)) {
+        var query = 'select number, line_mode, name from material, line where material.line_id = line.line_id and material_id = \'' + req.body.material_id + '\'';
+        console.log('\n' + query + '\n');
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
 
-        if (result.rows.length > 0) {
-            res.json({
-                success: true,
-                line_info: result.rows
-            });
-        } else {
-            res.json({success: false});
-        }
-    });
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    line_info: result.rows
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Client from shipping is requesting line information given a request ID
+app.post('/getLineInfoShipping', (req, res) => {
+    if (canUserAccess(req.body.token, 1)) {
+        var query = 'select number, line_mode, name from material, line, request where ' +
+            'request.line_id = line.line_id and request.material_id = material.material_id ' +
+            ' and request_id = \'' + req.body.request_id + '\'';
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
+
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    line_info: result.rows
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Client is request list of all requests
+app.post('/getAllStatusRequest', (req, res) => {
+    if (canUserAccess(req.body.token, 2)) {
+        var query = 'select status, number, name, colour, code, time_requested from ' +
+            'request, material, line where request.line_id = line.line_id and' +
+            ' request.material_id = material.material_id';
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
+
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    requests: result.rows
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Client is request list of all active requests
+app.post('/getActiveRequests', (req, res) => {
+    if (canUserAccess(req.body.token, 2)) {
+        var query = 'select time_requested, number, name, colour, code, request_id from ' +
+            'request, material, line where request.line_id = line.line_id and' +
+            ' request.material_id = material.material_id and request.status = ' +
+            '\'Active\'';
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
+
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    requests: result.rows
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+app.post('/newRequest', (req, res) => {
+    if (canUserAccess(req.body.token, 1)) {
+        var query = 'insert into request (line_id, material_id, status, ' +
+            'time_requested) values (\'' + req.body.line_id + '\', \'' + req.body.material_id +
+            '\', \'Active\', \'' + getTimestamp() + '\')';
+
+        console.log('\n' + query + '\n');
+        client.query(query, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.json({success: false});
+            } else {
+                // Request created, now fetch the ID to send back to client
+                var idQuery = 'select request_id from request where line_id = \'' +
+                    req.body.line_id + '\' and material_id = \'' + req.body.material_id + '\'';
+                console.log('\nID:' + idQuery + '\n');
+                client.query(idQuery, (idErr, idResult) => {
+                    if (idErr) console.log(idErr);
+
+                    if (idResult.rows.length > 0) {
+                        res.json({
+                            success: true,
+                            request_id: idResult.rows[0].request_id
+                        });
+                    } else {
+                        res.json({success: false});
+                    }
+                });
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Client is requesting the status of a request given the ID
+app.post('/statusUpdateLine', (req, res) => {
+    if (canUserAccess(req.body.token, 1)) {
+        var query = 'select status from request where request_id = \'' +
+            req.body.request_id + '\'';
+        client.query(query, (err, result) => {
+            if (err) console.log(err);
+
+            if (result.rows.length > 0) {
+                res.json({
+                    success: true,
+                    status: result.rows[0].status
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Request has been confirmed by both parties, so close it
+app.post('/requestCompleteShipping', (req, res) => {
+    if (canUserAccess(req.body.token, 2)) {
+        var activeInfoQuery = 'select line_id, material_id, time_requested from' +
+            ' request where request_id = \'' + req.body.request_id + '\'';
+            console.log(query + '\n');
+        client.query(query, (activeInfoErr, activeInfoResult) => {
+            if (activeInfoErr) console.log(activeInfoErr);
+            if (activeInfoResult.rows.length > 0) {
+
+                // Have the info from the request, create a completed_request
+                var query = 'insert into completed_request (line_id, material_id' +
+                    ', time_requested, time_completed) values (\'' +
+                    activeInfoResult.rows[0].line_id + '\', \'' +
+                    activeInfoResult.rows[0].material_id + '\', \'' +
+                    activeInfoResult.rows[0].time_requested + '\', \'' + getTimestamp() + '\')';
+                client.query(query, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        res.json({success: false});
+                    } else {
+                        // Completed_request made, remove the active one
+                        var removeQuery = 'delete from request where request_id = \'' +
+                            req.body.request_id + '\'';
+                        client.query(removeQuery, (removeErr, removeResult) => {
+                            if (removeErr) {
+                                console.log(removeErr);
+                                res.json({success: false});
+                            } else {
+                                res.json({success: true});
+                            }
+                        });
+                    }
+                });
+            } else {
+                res.json({success: false});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Shipping client has chosen a request, update to confirming
+app.post('/requestConfirming', (req, res) => {
+    if (canUserAccess(req.body.token, 2)) {
+        var query = 'update request set status = \'Confirming\' where ' +
+            'request_id = \'' + req.body.request_id + '\'';
+        client.query(query, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.json({success: false});
+            } else {
+                res.json({success: true});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Shipping client has confirmed, update request status to loading
+app.post('/requestLoading', (req, res) => {
+    if (canUserAccess(req.body.token, 2)) {
+        var query = 'update request set status = \'Loading\' where ' +
+            'request_id = \'' + req.body.request_id + '\'';
+        client.query(query, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.json({success: false});
+            } else {
+                res.json({success: true});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Shipping client has confirmed, update request status to loading
+app.post('/requestInTransit', (req, res) => {
+    if (canUserAccess(req.body.token, 2)) {
+        var query = 'update request set status = \'In-Transit\' where ' +
+            'request_id = \'' + req.body.request_id + '\'';
+        client.query(query, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.json({success: false});
+            } else {
+                res.json({success: true});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Shipping client has confirmed, update request status to loading
+app.post('/requestDelivered', (req, res) => {
+    if (canUserAccess(req.body.token, 2)) {
+        var query = 'update request set status = \'Delivered\' where ' +
+            'request_id = \'' + req.body.request_id + '\'';
+        client.query(query, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.json({success: false});
+            } else {
+                res.json({success: true});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+});
+
+// Shipping client has confirmed, update request status to loading
+app.post('/requestCompleteLine', (req, res) => {
+    console.log('request received');
+    if (canUserAccess(req.body.token, 2)) {
+        var query = 'update request set status = \'Complete\' where ' +
+            'request_id = \'' + req.body.request_id + '\'';
+        console.log('\n' + query);
+        client.query(query, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.json({success: false});
+            } else {
+                res.json({success: true});
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
 });
 
 // POST and GET backend methods END********************************************

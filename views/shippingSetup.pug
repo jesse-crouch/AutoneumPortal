@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h4(id="updateMsg") This page updates automatically
+
+    table(id="table" class="table table-striped")
+        thead(class="thead thead-dark")
+            th [ ]
+            th Time Requested
+            th Line
+            th Material
+            th Colour
+            th Code
+            th ID
+        tbody(id="tableBody")
+
+    input(type="submit" id="submit" value="Deliver" class="btn btn-success" style="width: 30%;")  

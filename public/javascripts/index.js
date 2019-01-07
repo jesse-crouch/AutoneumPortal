@@ -62,7 +62,7 @@ $(document).ready(() => {
     ];
 
     // Check if there is a user logged in
-    if (typeof getCookie('token') != 'undefined') {
+    if (document.cookie.includes('token')) {
         
         // Get user information from server using token
         $.post(server + '/verifyToken', { token: getCookie('token') }, (data) => {
@@ -70,9 +70,8 @@ $(document).ready(() => {
 
                 var titleText = document.getElementById('title');
                 if (data.info.first_name == '_line') {
-                    // If the user is line, customize the welcome message
-                    titleText.innerHTML = 'Line Panel';
-                    document.title = 'Home - Line';
+                    // If the user is line, send straight to lineSetup
+                    window.location.replace(server + '/setup/line');
                 } else if (data.info.first_name == '_shipping') {
                     // If the user is shipping, customize the welcome message
                     titleText.innerHTML = 'Shipping Panel';
