@@ -1,0 +1,40 @@
+extends layout
+
+block content
+
+    div(class="modal fade" id="confirmModal")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h4(class="modal-title") Delete User
+                    button(type="button" class="close" data-dismiss="modal") &times;
+                div(class="modal-body")
+                    Modal
+                        h6 Are you sure you want to delete this user?
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal") Close
+                    button(id="fullDeleteButton" type="button" class="btn btn-danger" data-dismiss="modal") Delete
+
+    div(class="modal fade" id="deletedModal")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h4(class="modal-title") User Deleted
+                    button(type="button" class="close" data-dismiss="modal") &times;
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal") Close
+    
+    div(class="input-group mb-3" style="width: 60%; margin: 0 auto;")
+        div(class="input-group-prepend")
+            button(id="newUserBtn" class="btn btn-success" type="button") Add New User
+        input(id="searchBox" type="text" class="form-control" placeholder="Search Users")
+    
+    table(id="table" class="table table-striped")
+        thead(class="thead thead-dark")
+            th Photo
+            th First Name
+            th Surname
+            th Email
+            th Date Registered
+            th 
+        tbody(id="tableBody")

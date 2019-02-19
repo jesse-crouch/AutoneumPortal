@@ -1,0 +1,62 @@
+extends layout
+
+block content
+
+    div(class="modal fade" id="confirmModal")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h4(class="modal-title") Delete Material
+                    button(type="button" class="close" data-dismiss="modal") &times;
+                div(class="modal-body")
+                    Modal
+                        h6 Are you sure you want to delete this material?
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal") Close
+                    button(id="fullDeleteButton" type="button" class="btn btn-danger" data-dismiss="modal") Delete
+
+    div(class="modal fade" id="detailsModal")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h4(class="modal-title") Material Details
+                    button(type="button" class="close" data-dismiss="modal") &times;
+                div(class="modal-body")
+                    Modal
+                        h5(id="codeText") Code: 
+                        h5(id="nameText") Name: 
+                        h5(id="colourText") Colour: 
+                        h5(id="lineText") Line: 
+                        h5(id="modeText") Line Mode: 
+                        h5(id="packSizeText") Pack Size: 
+                        h5(id="countText") Count: 
+                        h5(id="sapText") SAP Count: 
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal") Close
+
+    div(class="modal fade" id="deletedModal")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h4(class="modal-title") User Deleted
+                    button(type="button" class="close" data-dismiss="modal") &times;
+                div(class="modal-footer")
+                    button(type="button" class="btn btn-secondary" data-dismiss="modal") Close
+    
+    div(class="input-group mb-3" style="width: 60%; margin: 0 auto;")
+        div(class="input-group-prepend")
+            button(id="newMaterialBtn" class="btn btn-success" type="button") Add New Material
+        input(id="searchBox" type="text" class="form-control" placeholder="Search Users")
+        div(class="input-group-append")
+            button(id="delSelectedBtn" class="btn btn-danger" type="button" style="display: none;") Delete Selected
+    
+    table(id="table" class="table table-striped")
+        thead(class="thead thead-dark")
+            th 
+            th Code
+            th Material Name
+            th Colour
+            th Line
+            th 
+            th 
+        tbody(id="tableBody")

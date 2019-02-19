@@ -11,7 +11,7 @@ function getCookie(cookieName, document) {
 }
 
 $(document).ready(() => {
-    var server = 'http://99.242.210.34:3000';
+    var server = document.getElementById('serverURLInput').value;
 
     // Check for token
     if (!document.cookie.includes('token')) {
@@ -44,7 +44,7 @@ $(document).ready(() => {
         clock.innerHTML = date.toLocaleTimeString().substr(0, 5) + date.toLocaleTimeString().substr(8, 3);
         
         // Get requests
-        $.post(server + '/getAllStatusRequest', {token: token}, (data) => {
+        $.post(server + 'getAllStatusRequest', {token: token}, (data) => {
             if (data.success) {
                 for (var i=0; i<data.requests.length; i++) {
                     var newRow = document.createElement('tr');

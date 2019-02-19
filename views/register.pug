@@ -1,0 +1,63 @@
+extends layout
+
+block content
+
+    div(class="modal fade" id="successModal")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h4(class="modal-title") Success
+                    button(type="button" class="close" data-dismiss="modal") &times;
+                div(class="modal-body")
+                    Modal
+                        h6 User successfully registered, returning to users page.
+
+    div(style="width: 50%; margin: 0 auto;")
+        div(class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") First Name
+            input(id="firstNameField" type="text" class="form-control")
+        
+        div(class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") Surname
+            input(id="surnameField" type="text" class="form-control")
+
+        div(class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") Email
+            input(id="emailField" type="text" class="form-control")
+
+        div(class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") Employee Type
+            select(id="typeSelect" class="form-control")
+                option(selected) Choose a type
+                option Plant Floor
+                option Office
+        
+        div(class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") Pay Type
+            select(id="paySelect" class="form-control")
+                option(selected) Choose a pay type
+                option Hourly
+                option Salaried
+
+        div(id="payInput" style="display: none;" class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") Pay
+            div(class="input-group-prepend")
+                span(class="input-group-text") $
+            input(id="payField" type="text" class="form-control" placeholder="Optional")
+            div(class="input-group-append")
+                span(id="payDefinition" class="input-group-text") per hour
+
+        div(class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") Position
+            input(id="positionField" type="text" class="form-control" placeholder="Optional")
+
+        div(style="width: 90%; margin: 0 auto;")
+            input(id="cancel" type="submit" class="btn btn-secondary" value="Cancel" style="margin-right: 5px;")
+            input(id="submit" type="submit" class="btn btn-success" value="Register" style="margin-left: 5px;")

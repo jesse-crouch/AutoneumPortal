@@ -11,7 +11,7 @@ function getCookie(cookieName, document) {
 }
 
 $(document).ready(() => {
-    var server = 'http://99.242.210.34:3000';
+    var server = document.getElementById('serverURLInput').value;
 
     // Check for token
     if (!document.cookie.includes('token')) {
@@ -33,11 +33,11 @@ $(document).ready(() => {
 
     button.addEventListener('click', () => {
         // Check that the request is still active
-        $.post(server + '/statusUpdateLine', {token: token, request_id: selected_id}, (data) => {
+        $.post(server + 'statusUpdateLine', {token: token, request_id: selected_id}, (data) => {
             if (data.success) {
                 if (data.status == 'Active') {
                     // Request is still active
-                    window.location.replace(server + '/shipping?i=' + selected_id);
+                    window.location.replace(server + 'shipping?i=' + selected_id);
                 } else {
                     // Request is not active
                     setTimeout(() => {
@@ -83,7 +83,7 @@ $(document).ready(() => {
 
     // Timer method
     function updateTable() {
-        $.post(server + '/getActiveRequests', {token: token}, (data) => {
+        $.post(server + 'getActiveRequests', {token: token}, (data) => {
             if (data.success) {
                 //console.log(data);
 

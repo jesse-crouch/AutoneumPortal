@@ -11,7 +11,7 @@ function getCookie(cookieName, document) {
 }
 
 $(document).ready(() => {
-    var server = 'http://99.242.210.34:3000';
+    var server = document.getElementById('serverURLInput').value;
 
     // Check for token
     if (!document.cookie.includes('token')) {
@@ -45,7 +45,7 @@ $(document).ready(() => {
             requestButton.style.background = 'yellow';
             requestButton.innerHTML = 'IN-TRANSIT (Click to confirm delivered)';
 
-            $.post(server + '/requestInTransit', postData, (data) => {
+            $.post(server + 'requestInTransit', postData, (data) => {
                 if (!data.success) {
                     alert('Error updating request to in-transit');
                 }
@@ -57,20 +57,20 @@ $(document).ready(() => {
             requestButton.innerHTML = 'DELIVERED (Waiting for line confirmation)';
             requestButton.disabled = true;
 
-            $.post(server + '/requestDelivered', postData, (data) => {
+            $.post(server + 'requestDelivered', postData, (data) => {
                 if (data.success) {
                     
                     // Wait for line to confirm delivery
                     var updateCheck = setInterval(() => {
-                        $.post(server + '/statusUpdateLine', postData, (data) => {
+                        $.post(server + 'statusUpdateLine', postData, (data) => {
                             if (data.success) {
                                 if (data.status == 'Complete') {
                                     // Send completion notification to sever, and return to setup
                                     console.log('sending request');
-                                    $.post(server + '/requestCompleteShipping', postData, (data) => {
+                                    $.post(server + 'requestCompleteShipping', postData, (data) => {
                                         console.log(data);
                                         if (data.success) {
-                                            window.location.replace(server + '/setup/shipping');
+                                            window.location.replace(server + 'setup/shipping');
                                         } else {
                                             alert('Error completing request');
                                         }
@@ -101,7 +101,7 @@ $(document).ready(() => {
                         requestButton.innerHTML = 'LOADING (Click to confirm request is loaded)';
                         configButton.style.visibility = 'hidden';
 
-                        $.post(server + '/requestLoading', {token: token, request_id: requestID}, (data) => {
+                        $.post(server + 'requestLoading', {token: token, request_id: requestID}, (data) => {
                             if (!data.success) {
                                 alert('Error updating request to loading');
                             }
@@ -123,11 +123,11 @@ $(document).ready(() => {
 
     // Reconfigure button just sends user back to setup page
     configButton.addEventListener('click', () => {
-        window.location.replace(server + '/setup/shipping');
+        window.location.replace(server + 'setup/shipping');
     });
 
     // Get the line information from DB given request ID
-    $.post(server + '/getLineInfoShipping', {token: token, request_id: requestID}, (data) => {
+    $.post(server + 'getLineInfoShipping', {token: token, request_id: requestID}, (data) => {
         if (data.success) {
 
             lineHeader.innerHTML = data.line_info[0].number;
@@ -139,7 +139,7 @@ $(document).ready(() => {
     });
 
     // Update request status to confirming
-    $.post(server + '/requestConfirming', postData, (data) => {
+    $.post(server + 'requestConfirming', postData, (data) => {
         if (!data.success) {
             alert('Error updating request after page load');
         }

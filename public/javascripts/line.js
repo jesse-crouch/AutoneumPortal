@@ -11,7 +11,7 @@ function getCookie(cookieName, document) {
 }
 
 $(document).ready(() => {
-    var server = 'http://99.242.210.34:3000';
+    var server = document.getElementById('serverURLInput').value;
 
     // Check for token
     if (!document.cookie.includes('token')) {
@@ -44,7 +44,7 @@ $(document).ready(() => {
             requestButton.innerHTML = 'REQUEST';
             configButton.style.visibility = 'visible';
 
-            $.post(server + '/requestCompleteLine', {token: token, request_id: requestID}, (data) => {
+            $.post(server + 'requestCompleteLine', {token: token, request_id: requestID}, (data) => {
                 if (!data.success) {
                     alert('Error completing request, alert team lead');
                 }
@@ -71,14 +71,14 @@ $(document).ready(() => {
                             line_id: lineID,
                             material_id: materialID
                         };
-                        $.post(server + '/newRequest', postData, (data) => {
+                        $.post(server + 'newRequest', postData, (data) => {
                             if (data.success) {
 
                                 requestID = data.request_id;
                                 // Check every 5s for a status update
                                 var updateCheck = setInterval(() => {
                                     
-                                    $.post(server + '/statusUpdateLine', {token: token, request_id: requestID}, (data) => {
+                                    $.post(server + 'statusUpdateLine', {token: token, request_id: requestID}, (data) => {
                                         if (data.success) {
                                             
                                             if (data.status == 'Loading') {
@@ -133,11 +133,11 @@ $(document).ready(() => {
 
     // Reconfigure button just sends user back to setup page
     configButton.addEventListener('click', () => {
-        window.location.replace(server + '/setup/line');
+        window.location.replace(server + 'setup/line');
     });
 
     // Get the line information from DB given material ID
-    $.post(server + '/getLineInfo', {token: token, material_id: materialID}, (data) => {
+    $.post(server + 'getLineInfo', {token: token, material_id: materialID}, (data) => {
         if (data.success) {
 
             console.log(data);

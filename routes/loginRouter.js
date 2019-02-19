@@ -1,9 +1,21 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 
-/* GET login page. */
+var url = '';
+fs.readFile('serverURL.txt', 'utf8', (err, data) => {
+	if (err) console.log(err);
+	url = data;
+});
+
+/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('login', { title: 'Login', jscript: 'login' });
+	console.log(url);
+  res.render('login', {
+	  title: 'Login',
+	  jscript: 'login',
+	  serverURL: url
+  });
 });
 
 module.exports = router;

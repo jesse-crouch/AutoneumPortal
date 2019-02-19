@@ -1,0 +1,26 @@
+extends layout
+
+block content
+
+    div(class="modal fade" id="successModal")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    h4(class="modal-title") Success
+                    button(type="button" class="close" data-dismiss="modal") &times;
+                div(class="modal-body")
+                    Modal
+                        h6(id="successText") Password set, redirecting to login.
+    
+    div(class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") Desired Password
+            input(id="passBox" type="password" class="form-control")
+
+    div(class="input-group mb-3")
+            div(class="input-group-prepend")
+                span(class="input-group-text" id="basic-addon1") Repeat Password
+            input(id="passRepeatBox" type="password" class="form-control")
+    h4(id="warning" style="color: red; display: none;")
+
+    input(id="verifyBtn" type="submit" class="btn btn-primary" value="Verify")

@@ -1,9 +1,20 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 
-/* GET register page. */
+var url = '';
+fs.readFile('serverURL.txt', 'utf8', (err, data) => {
+	if (err) console.log(err);
+	url = data;
+});
+
+/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'No user logged in', jscript: 'index' });
+  res.render('register', {
+	  title: 'Autoneum - New User',
+	  jscript: 'register',
+	  serverURL: url
+  });
 });
 
 module.exports = router;
