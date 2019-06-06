@@ -99,6 +99,8 @@ $(document).ready(() => {
                                                 
                                                 clearInterval(updateCheck);
                                                 updateCheck = null;
+                                                clearInterval(timer);
+                                                timer = null;
                                             }
                                         } else {
                                             alert('Error getting status update, trying again in 5 seconds...');

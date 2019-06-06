@@ -145,7 +145,7 @@ app.post('/verifyToken', (req, res) => {
 
 // Client requesting a list of all lines
 app.get('/getLines', (req, res) => {
-    var query = 'select number from line';
+    var query = 'select distinct number from line';
     client.query(query, (err, result) => {
         if (err) console.log(err);
 
