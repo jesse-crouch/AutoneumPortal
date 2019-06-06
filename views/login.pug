@@ -2,16 +2,22 @@ extends layout
 
 block content
     div(style="width: 50%; margin: 0 auto;")
-        div(class="input-group mb-3")
-            div(class="input-group-prepend")
-                span(class="input-group-text") Email
-            input(id="email" type="text" class="form-control")
+        input(id="lineBtn" style="width: 80%; margin-bottom: 2%;" type="submit" class="btn btn-secondary" value="Line Setup")
+        input(id="shipBtn" style="width: 80%; margin-bottom: 2%;" type="submit" class="btn btn-secondary" value="Shipping Setup")
+        input(id="statusBtn" style="width: 80%;" type="submit" class="btn btn-secondary" value="Active Requests")
 
-        div(class="input-group mb-3")
-            div(class="input-group-prepend")
-                span(class="input-group-text") Password
-            input(id="password" type="password" class="form-control")
-        input(type="submit" style="margin-bottom: 50px;" id="submit" value="Login" class="btn btn-success")
+    //-
+        div(style="width: 50%; margin: 0 auto;")
+            div(class="input-group mb-3")
+                div(class="input-group-prepend")
+                    span(class="input-group-text") Email
+                input(id="email" type="text" class="form-control")
+
+            div(class="input-group mb-3")
+                div(class="input-group-prepend")
+                    span(class="input-group-text") Password
+                input(id="password" type="password" class="form-control")
+            input(type="submit" style="margin-bottom: 50px;" id="submit" value="Login" class="btn btn-success")
 
         //-
             h4 Plant Access
@@ -28,7 +34,3 @@ block content
                 input(id="shipPassBox" type="password" class="form-control" placeholder="Password")
                 div(class="input-group-append")
                     input(id="shipBtn" type="submit" class="btn btn-secondary" value=">")
-
-        input(id="lineBtn" style="width: 80%;" type="submit" class="btn btn-secondary" value="Line Setup")
-        input(id="shipBtn" style="width: 80%;" type="submit" class="btn btn-secondary" value="Shipping Setup")
-        input(id="statusBtn" style="width: 80%;" type="submit" class="btn btn-secondary" value="Active Requests")

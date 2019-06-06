@@ -1,0 +1,5 @@
+ec2-54-225-72-238.compute-1.amazonaws.com
+5432
+d2lpogd00138ca
+tyuqayggwqkoen
+a9c6e539c9b66f211e34a47436fedd90cb51f04144f5ff4a2a9609dd11024524

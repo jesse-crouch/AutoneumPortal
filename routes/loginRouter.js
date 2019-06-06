@@ -12,7 +12,7 @@ fs.readFile('serverURL.txt', 'utf8', (err, data) => {
 router.get('/', function(req, res, next) {
 	console.log(url);
   res.render('login', {
-	  title: 'Login',
+	  title: 'Plant Access',
 	  jscript: 'login',
 	  serverURL: url
   });

@@ -8,12 +8,20 @@ var fs = require('fs');
 var nodemailer = require('nodemailer');
 var secretKey = '8c05737c6e56bcf32d97e8169556ab708ce353a47e65460fb3b16fcdaa43edc6';
 var { Client } = require('pg');
-var client = new Client({
-    host: 'ec2-54-225-72-238.compute-1.amazonaws.com',
-    port: '5432',
-    database: 'd2lpogd00138ca',
-    user: 'tyuqayggwqkoen',
-    password: 'a9c6e539c9b66f211e34a47436fedd90cb51f04144f5ff4a2a9609dd11024524'
+var client = null;
+
+var dbInfoText = '', dbInfo = new Array(4);
+fs.readFile('dbInfo.txt', 'utf8', (err, data) => {
+	if (err) console.log(err);
+    dbInfo = data.split('\n');
+    client = new Client({
+        host: dbInfo[0],
+        port: dbInfo[1],
+        database: dbInfo[2],
+        user: dbInfo[3],
+        password: dbInfo[4]
+    });
+    client.connect();
 });
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -38,7 +46,6 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-client.connect();
 //app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
