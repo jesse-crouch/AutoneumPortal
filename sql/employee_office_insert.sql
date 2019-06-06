@@ -1,3 +1,7 @@
-﻿insert into employee_office (employee_id, password, salt, access_level)
-	values (2,"e2adb1d88e52bcb478fcf6123b49ac2ec783a6a22598d70394668269eadf0adf","9786dc59695510c847d526139a02577e538c157e1c0a6990eb4250267acea89e",4),
-		(1,"449493a43e3db9d81dab965333cb77afa9bebf96238135203341ce0e6d712475","01c3b322de38a3a6308ebbd764196373bdb2bb13ebc97eaf48c6c62bb867952f",6),
+﻿/*
+	2 - harry
+	1 - mplkO0935
+*/
+insert into employee_office (employee_id, password, salt, access_level)
+	values (2,'804ef6057138a463a4dfddc068352156c1992f3c85a6e905c7b409bda162756a','7391fc15aa7ad688371ff5fa966d146aa8219633fac126b443c5f93c73bc0b20',4),
+		(1,'8543a475bce9d78c5dba0cca47a5322b6d97593d077326b2a088b4c1cc7cea3e','f7d49d041885c9e23a5e3094433f8b552082860a6ab6ffd8ac0bfd1c5a4434f8',6);

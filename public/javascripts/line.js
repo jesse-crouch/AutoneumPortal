@@ -14,10 +14,10 @@ $(document).ready(() => {
     var server = document.getElementById('serverURLInput').value;
 
     // Check for token
-    if (!document.cookie.includes('token')) {
+    /*if (!document.cookie.includes('token')) {
         window.location.replace(server);
     }
-    var token = getCookie('token', document);
+    var token = getCookie('token', document);*/
 
     // Get rid of the logo
     document.getElementById('logo').style.display = 'none';
@@ -44,7 +44,7 @@ $(document).ready(() => {
             requestButton.innerHTML = 'REQUEST';
             configButton.style.visibility = 'visible';
 
-            $.post(server + 'requestCompleteLine', {token: token, request_id: requestID}, (data) => {
+            $.post(server + 'requestCompleteLine', {request_id: requestID}, (data) => {
                 if (!data.success) {
                     alert('Error completing request, alert team lead');
                 }
@@ -67,7 +67,6 @@ $(document).ready(() => {
                         configButton.style.visibility = 'hidden';
 
                         var postData = {
-                            token: token,
                             line_id: lineID,
                             material_id: materialID
                         };
@@ -78,7 +77,7 @@ $(document).ready(() => {
                                 // Check every 5s for a status update
                                 var updateCheck = setInterval(() => {
                                     
-                                    $.post(server + 'statusUpdateLine', {token: token, request_id: requestID}, (data) => {
+                                    $.post(server + 'statusUpdateLine', {request_id: requestID}, (data) => {
                                         if (data.success) {
                                             
                                             if (data.status == 'Loading') {
@@ -137,13 +136,13 @@ $(document).ready(() => {
     });
 
     // Get the line information from DB given material ID
-    $.post(server + 'getLineInfo', {token: token, material_id: materialID}, (data) => {
+    $.post(server + 'getLineInfo', {material_id: materialID}, (data) => {
         if (data.success) {
 
             console.log(data);
-            lineHeader.innerHTML = data.line_info[0].number;
-            lineModeHeader.innerHTML = data.line_info[0].line_mode;
-            materialHeader.innerHTML = data.line_info[0].name;
+            lineHeader.innerHTML = 'Line - ' + data.line_info[0].number;
+            lineModeHeader.innerHTML = 'Mode - ' + data.line_info[0].line_mode;
+            materialHeader.innerHTML = 'Material - ' + data.line_info[0].name;
 
         } else {
             alert('Error fetching line information');

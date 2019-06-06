@@ -11,7 +11,7 @@ var { Client } = require('pg');
 var client = new Client({
     host: 'localhost',
     port: '5432',
-    database: 'autoneumportal',
+    database: 'AutoneumPortal',
     user: 'postgres',
     password: 'mplkO0'
 });

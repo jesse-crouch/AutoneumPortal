@@ -14,10 +14,10 @@ $(document).ready(() => {
     var server = document.getElementById('serverURLInput').value;
 
     // verify token
-    if (!document.cookie.includes('token')) {
+    /*if (!document.cookie.includes('token')) {
         window.location.replace(server);
     }
-    var token = getCookie('token', document);
+    var token = getCookie('token', document);*/
 
     var lineSelectHeader = document.getElementById('lineSelectHeader');
     var modeSelectHeader = document.getElementById('modeSelectHeader');
@@ -49,13 +49,12 @@ $(document).ready(() => {
         if (number != 'Select a Line' && mode != 'Select a Line Mode' && material != 'Select a Material') {
             // All selections are good. Fetch material ID from DB and send as url param
             $.post(server + 'getMaterialLineID', {
-                token: token,
                 number: number,
                 line_mode: mode,
                 name: material
             }, (data) => {
                 if (data.success) {
-                    window.location.replace(server + '/line?m=' +
+                    window.location.replace(server + 'line?m=' +
                         data.material_id + '&l=' + data.line_id);
                 } else {
                     alert('Error occurred, try again.');
@@ -73,7 +72,7 @@ $(document).ready(() => {
 
         // Update the line modes now that a number has been chosen
         if (number != 'Select a Line') {
-            $.post(server + 'getLineModes', {token: token, number: number}, (data) => {
+            $.post(server + 'getLineModes', {number: number}, (data) => {
                 if (data.success) {
                     populateModes(data);
     
@@ -90,7 +89,6 @@ $(document).ready(() => {
         if (materialSelect.style.visibility != 'hidden' && mode != 'Select a Line Mode') {
             // Materials not invisible, update list
             $.post(server + 'getMaterials', {
-                token: token,
                 number: number,
                 line_mode: mode
             }, (data) => {
@@ -113,7 +111,6 @@ $(document).ready(() => {
             
             var mode = modeSelect.options[modeSelect.selectedIndex].value;
             $.post(server + 'getMaterials', {
-                token: token,
                 number: number,
                 line_mode: mode
             }, (data) => {
@@ -218,7 +215,7 @@ $(document).ready(() => {
     }
 
     // Get list of lines from server first
-    $.post(server + 'getLines', {token: token}, (data) => {
+    $.get(server + 'getLines', (data) => {
         populateLines(data);
 
         // Change the line header, and make the lineSelect visible again

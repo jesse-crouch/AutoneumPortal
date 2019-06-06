@@ -1,5 +1,5 @@
 ﻿CREATE TABLE employee (
-  employee_id integer primary key NOT NULL,
+  employee_id serial primary key NOT NULL,
   first_name varchar(50) NOT NULL,
   surname varchar(50) NOT NULL,
   email varchar(100) NOT NULL,
