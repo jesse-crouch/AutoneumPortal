@@ -13,19 +13,22 @@ block content
             input(id="password" type="password" class="form-control")
         input(type="submit" style="margin-bottom: 50px;" id="submit" value="Login" class="btn btn-success")
 
-        h4 Plant Access
-        div(class="input-group mb-3")
-            div(class="input-group-prepend")
-                span(class="input-group-text" id="basic-addon1") Line Setup
-            input(id="linePassBox" type="password" class="form-control" placeholder="Password")
-            div(class="input-group-append")
-                input(id="lineBtn" type="submit" class="btn btn-secondary" value=">")
+        //-
+            h4 Plant Access
+            div(class="input-group mb-3")
+                div(class="input-group-prepend")
+                    span(class="input-group-text" id="basic-addon1") Line Setup
+                input(id="linePassBox" type="password" class="form-control" placeholder="Password")
+                div(class="input-group-append")
+                    input(id="lineBtn" type="submit" class="btn btn-secondary" value=">")
 
-        div(class="input-group mb-3")
-            div(class="input-group-prepend")
-                span(class="input-group-text" id="basic-addon1") Shipping Setup
-            input(id="shipPassBox" type="password" class="form-control" placeholder="Password")
-            div(class="input-group-append")
-                input(id="shipBtn" type="submit" class="btn btn-secondary" value=">")
+            div(class="input-group mb-3")
+                div(class="input-group-prepend")
+                    span(class="input-group-text" id="basic-addon1") Shipping Setup
+                input(id="shipPassBox" type="password" class="form-control" placeholder="Password")
+                div(class="input-group-append")
+                    input(id="shipBtn" type="submit" class="btn btn-secondary" value=">")
 
+        input(id="lineBtn" style="width: 80%;" type="submit" class="btn btn-secondary" value="Line Setup")
+        input(id="shipBtn" style="width: 80%;" type="submit" class="btn btn-secondary" value="Shipping Setup")
         input(id="statusBtn" style="width: 80%;" type="submit" class="btn btn-secondary" value="Active Requests")

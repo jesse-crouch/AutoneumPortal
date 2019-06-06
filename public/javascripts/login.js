@@ -8,19 +8,21 @@ $(document).ready(() => {
     var statusBtn = document.getElementById('statusBtn');
 
     lineBtn.addEventListener('click', () => {
-        if (linePassBox.value != '') {
+        /*if (linePassBox.value != '') {
             if (linePassBox.value == 'linePassword') {
                 window.location.replace(server + 'setup/line');
             }
-        }
+        }*/
+        window.location.replace(server + 'setup/line');
     });
 
     shipBtn.addEventListener('click', () => {
-        if (shipPassBox.value != '') {
+        /*if (shipPassBox.value != '') {
             if (shipPassBox.value == 'shipPassword') {
                 window.location.replace(server + 'setup/shipping');
             }
-        }
+        }*/
+        window.location.replace(server + 'setup/shipping');
     });
 
     statusBtn.addEventListener('click', () => {
