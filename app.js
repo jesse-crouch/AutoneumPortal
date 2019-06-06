@@ -9,11 +9,11 @@ var nodemailer = require('nodemailer');
 var secretKey = '8c05737c6e56bcf32d97e8169556ab708ce353a47e65460fb3b16fcdaa43edc6';
 var { Client } = require('pg');
 var client = new Client({
-    host: 'localhost',
+    host: 'ec2-54-225-72-238.compute-1.amazonaws.com',
     port: '5432',
-    database: 'AutoneumPortal',
-    user: 'postgres',
-    password: 'mplkO0'
+    database: 'd2lpogd00138ca',
+    user: 'tyuqayggwqkoen',
+    password: 'a9c6e539c9b66f211e34a47436fedd90cb51f04144f5ff4a2a9609dd11024524'
 });
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -39,7 +39,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 client.connect();
-app.use(cors());
+//app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -264,7 +264,7 @@ app.post('/getAllStatusRequest', (req, res) => {
                 requests: result.rows
             });
         } else {
-            res.json({success: false});
+            res.json({success: false, reason: 'empty'});
         }
     });
 });
@@ -342,8 +342,8 @@ app.post('/statusUpdateLine', (req, res) => {
 app.post('/requestCompleteShipping', (req, res) => {
     var activeInfoQuery = 'select line_id, material_id, time_requested from' +
         ' request where request_id = \'' + req.body.request_id + '\'';
-        console.log(query + '\n');
-    client.query(query, (activeInfoErr, activeInfoResult) => {
+        console.log(activeInfoQuery + '\n');
+    client.query(activeInfoQuery, (activeInfoErr, activeInfoResult) => {
         if (activeInfoErr) console.log(activeInfoErr);
         if (activeInfoResult.rows.length > 0) {
 
@@ -380,6 +380,20 @@ app.post('/requestCompleteShipping', (req, res) => {
 // Shipping client has chosen a request, update to confirming
 app.post('/requestConfirming', (req, res) => {
     var query = 'update request set status = \'Confirming\' where ' +
+        'request_id = \'' + req.body.request_id + '\'';
+    client.query(query, (err, result) => {
+        if (err) {
+            console.log(err);
+            res.json({success: false});
+        } else {
+            res.json({success: true});
+        }
+    });
+});
+
+// Shipping client is reconfiguring, set status back to active
+app.post('/requestActive', (req, res) => {
+    var query = 'update request set status = \'Active\' where ' +
         'request_id = \'' + req.body.request_id + '\'';
     client.query(query, (err, result) => {
         if (err) {

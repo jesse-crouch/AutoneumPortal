@@ -14,10 +14,11 @@ $(document).ready(() => {
     var server = document.getElementById('serverURLInput').value;
 
     // Check for token
-    if (!document.cookie.includes('token')) {
+    /*if (!document.cookie.includes('token')) {
         window.location.replace(server);
     }
-    var token = getCookie('token', document);
+    var token = getCookie('token', document);*/
+    var token = 'wee';
 
     var title = document.getElementById('title');
     var updateMsg = document.getElementById('updateMsg');
@@ -83,14 +84,10 @@ $(document).ready(() => {
 
     // Timer method
     function updateTable() {
+        var rows = new Array();
         $.post(server + 'getActiveRequests', {token: token}, (data) => {
             if (data.success) {
-                //console.log(data);
-
-                // Clear the table of rows
-                while(tbody.firstChild) {
-                    tbody.removeChild(tbody.firstChild);
-                }
+                //console.log(data)
 
                 // Create a row for each active request
                 for (var i=0; i<data.requests.length; i++) {
@@ -130,12 +127,19 @@ $(document).ready(() => {
                     newRow.appendChild(code);
                     newRow.appendChild(id);
 
-                    tbody.appendChild(newRow);
+                    rows.push(newRow);
+                }
+
+                while(tbody.firstChild) {
+                    tbody.removeChild(tbody.firstChild);
+                }
+                for (var rowIndex in rows) {
+                    tbody.appendChild(rows[rowIndex]);
                 }
 
                 // Make the table visible, and the update msg invisible
                 table.style.visibility = 'visible';
-                updateMsg.style.visibility = 'hidden';
+                updateMsg.innerHTML = 'This page updates automatically';
                 title.innerHTML = 'Active Requests';
             } else {
                 console.log('no data');

@@ -14,10 +14,11 @@ $(document).ready(() => {
     var server = document.getElementById('serverURLInput').value;
 
     // Check for token
-    if (!document.cookie.includes('token')) {
+    /*if (!document.cookie.includes('token')) {
         window.location.replace(server);
     }
-    var token = getCookie('token', document);
+    var token = getCookie('token', document);*/
+    var token = 'wee';
 
     // Get rid of the logo
     document.getElementById('logo').style.display = 'none';
@@ -61,7 +62,7 @@ $(document).ready(() => {
                 if (data.success) {
                     
                     // Wait for line to confirm delivery
-                    var updateCheck = setInterval(() => {
+                    setInterval(() => {
                         $.post(server + 'statusUpdateLine', postData, (data) => {
                             if (data.success) {
                                 if (data.status == 'Complete') {
@@ -122,8 +123,15 @@ $(document).ready(() => {
     });
 
     // Reconfigure button just sends user back to setup page
+    // and updates the request status back to active
     configButton.addEventListener('click', () => {
-        window.location.replace(server + 'setup/shipping');
+        $.post(server + 'requestActive', {request_id: requestID}, (data) => {
+            if (data.success) {
+                window.location.replace(server + 'setup/shipping');
+            } else {
+                alert('Error resetting request status');
+            }
+        });
     });
 
     // Get the line information from DB given request ID

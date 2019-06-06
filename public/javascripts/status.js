@@ -14,10 +14,11 @@ $(document).ready(() => {
     var server = document.getElementById('serverURLInput').value;
 
     // Check for token
-    if (!document.cookie.includes('token')) {
+    /*if (!document.cookie.includes('token')) {
         window.location.replace(server);
     }
-    var token = getCookie('token', document);
+    var token = getCookie('token', document);*/
+    var token = 'wee';
 
     // Get rid of the logo
     document.getElementById('logo').style.display = 'none';
@@ -27,25 +28,40 @@ $(document).ready(() => {
     var clock = document.getElementById('clock');
     var fullTable = document.getElementById('full-table');
     var loading = document.getElementById('loading');
+    var emptyAlert = document.getElementById('emptyAlert');
+
+    fullTable.style.visibility = 'visible';
     
     // Every 5s, clear the table and fetch the requests
     setInterval(() => {
         loading.innerHTML = 'Material Requests';
-        if (fullTable.style.visibility == 'hidden') {
+        /*if (fullTable.style.visibility == 'hidden') {
             fullTable.style.visibility = 'visible';
-        }
-        
-        while(table.firstChild) {
-            table.removeChild(table.firstChild);
-        }
+        }*/
         
         // Update clock
         var date = new Date();
-        clock.innerHTML = date.toLocaleTimeString().substr(0, 5) + date.toLocaleTimeString().substr(8, 3);
+        if (date.toLocaleTimeString().substr(0, 2).includes(':')) {
+            clock.innerHTML = date.toLocaleTimeString().substr(0, 4);
+        } else {
+            clock.innerHTML = date.toLocaleTimeString().substr(0, 5);
+        }
+        if (date.toLocaleTimeString().substr(date.toLocaleTimeString().length-4, 1).includes('p')) {
+            clock.innerHTML += ' pm';
+        } else {
+            clock.innerHTML += ' am';
+        }
+
+        // Hide the table until all requests are added to prevent flickering
+        //fullTable.style.display = 'none';
         
+        var rows = new Array();
         // Get requests
         $.post(server + 'getAllStatusRequest', {token: token}, (data) => {
             if (data.success) {
+                table.style.display = '';
+                emptyAlert.style.display = 'none';
+
                 for (var i=0; i<data.requests.length; i++) {
                     var newRow = document.createElement('tr');
                     
@@ -88,7 +104,23 @@ $(document).ready(() => {
                     } else if (status.textContent == 'Delivered') {
                         status.style.background = 'lime';
                     }
-                    table.appendChild(newRow);
+                    rows.push(newRow);
+                }
+
+                while(table.firstChild) {
+                    table.removeChild(table.firstChild);
+                }
+                for (var rowIndex in rows) {
+                    table.appendChild(rows[rowIndex]);
+                }
+
+                // Show the table now that everything has been added
+                //fullTable.style.display = '';
+            } else {
+                if (data.reason == 'empty') {
+                    table.style.display = 'none';
+                    emptyAlert.style.display = '';
+                    emptyAlert.innerHTML = 'No Active Requests';
                 }
             }
         });
