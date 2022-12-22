@@ -15,7 +15,7 @@
     "externalip": "^1.0.2",
     "fs": "0.0.1-security",
     "http-errors": "~1.6.2",
-    "jsonwebtoken": "^8.4.0",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "~1.9.0",
     "nodemailer": "^5.1.1",
     "nodemon": "^1.18.9",
